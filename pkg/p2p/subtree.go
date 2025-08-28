@@ -27,7 +27,7 @@ func GetSubtree(subtreeMessage p2p.SubtreeMessage) (*subtree.Subtree, error) {
 
 	// Sanity check, subtrees should never be empty
 	if numberOfNodes == 0 {
-		return nil, errors.New("[catchup:fetchAndStoreSubtreeData] Subtree has zero nodes")
+		return nil, errors.New("subtree has zero nodes")
 	}
 
 	// Deserialize the subtree nodes from the bytes
@@ -36,12 +36,12 @@ func GetSubtree(subtreeMessage p2p.SubtreeMessage) (*subtree.Subtree, error) {
 		nodeBytes := subtreeNodeBytes[i*chainhash.HashSize : (i+1)*chainhash.HashSize]
 		nodeHash, err := chainhash.NewHash(nodeBytes)
 		if err != nil {
-			return nil, fmt.Errorf("[catchup:fetchAndStoreSubtreeData] Failed to create hash from bytes at index: %d %w", i, err)
+			return nil, fmt.Errorf("failed to create hash from bytes at index: %d %w", i, err)
 		}
 
 		if i == 0 && nodeHash.Equal(subtree.CoinbasePlaceholderHashValue) {
 			if err = st.AddCoinbaseNode(); err != nil {
-				return nil, fmt.Errorf("[catchup:fetchAndStoreSubtreeData] Failed to add coinbase node to subtree at index: %d %w", i, err)
+				return nil, fmt.Errorf("failed to add coinbase node to subtree at index: %d %w", i, err)
 			}
 
 			continue
@@ -49,7 +49,7 @@ func GetSubtree(subtreeMessage p2p.SubtreeMessage) (*subtree.Subtree, error) {
 
 		// Add the node to the subtree, we do not know the fee or size yet, so we use 0
 		if err = st.AddNode(*nodeHash, 0, 0); err != nil {
-			return nil, fmt.Errorf("[catchup:fetchAndStoreSubtreeData] Failed to add node to subtree at index %d %w", i, err)
+			return nil, fmt.Errorf("failed to add node to subtree at index %d %w", i, err)
 		}
 	}
 

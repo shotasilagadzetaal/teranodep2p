@@ -74,6 +74,7 @@ func main() {
 		panic(err)
 	}
 
+	// subscribe and log subtree messages
 	subtrees := node.SubscribeSubtree()
 	for msg := range subtrees {
 		var evt p2p.SubtreeMessage
